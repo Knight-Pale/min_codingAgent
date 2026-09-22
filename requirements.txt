@@ -1,17 +1,18 @@
-annotated-types @ file:///home/task_cprZgjTRSUOIT_0/croot/annotated-types_1783680958242/work
-anyio @ file:///home/task_177313440493866/croot/anyio_1773134429107/work
-certifi @ file:///home/task_A5sLR00KQxqQn_0/croot/certifi_1785412676510/work/certifi
-distro @ file:///work/buildout/croot/distro_1759959180126/work
-h11 @ file:///home/task_176193128033921/conda-bld/h11_1761931291684/work
-httpcore @ file:///work/buildout/croot/httpcore_1761937693110/work
-httpx @ file:///work/buildout/croot/httpx_1762546603281/work
-idna @ file:///home/task_178056148282513/croot/idna_1780561508300/work
-jiter @ file:///home/task_XraUPU10TGCC1_0/croot/jiter_1784720863267/work
-openai @ file:///home/task_U8YFmIi-TbynM_0/croot/openai_1785322174863/work
-pydantic @ file:///home/task_177868317787016/croot/pydantic_1778683872108/work
-pydantic_core @ file:///home/task_177867687046450/croot/pydantic-core_1778676902882/work
-python-dotenv @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_python-dotenv_1787003234/work
-sniffio @ file:///home/task_176432907833212/conda-bld/sniffio_1764329152797/work
-tqdm @ file:///home/task_178696915264560/croot/tqdm_1786969179580/work
-typing-inspection @ file:///home/task_178653448277624/croot/typing-inspection_1786534509190/work
-typing_extensions @ file:///home/task_UHgmAJz3TrKjo_0/croot/typing_extensions_1784101013368/work
+annotated-types==0.7.0
+anyio==4.12.1
+certifi==2026.7.22
+distro==1.9.0
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
+idna==3.18
+jiter==0.16.0
+openai==2.49.0
+pip==26.2.1
+pydantic==2.13.4
+pydantic_core==2.46.4
+python-dotenv==1.2.3
+sniffio==1.3.1
+tqdm==4.70.0
+typing_extensions==4.16.0
+typing-inspection==0.4.3
