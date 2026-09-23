@@ -5,6 +5,7 @@ from pathlib import Path
 from tools import read_tool,ToolContext,TOOLS,tools_calls
 import os
 import json
+from colorama import init,Fore
 
 load_dotenv()
 
@@ -23,7 +24,7 @@ def agent_loop(messages:list,client:OpenAI,ctx:ToolContext):
                 continue
             delta=chunk.choices[0].delta
             if delta.content:
-                print(delta.content,end="")
+                print(Fore.BLUE+delta.content,end="")
                 reply.append(delta.content)
 
             for tc in delta.tool_calls or []:
@@ -58,6 +59,7 @@ def agent_loop(messages:list,client:OpenAI,ctx:ToolContext):
 
 
 if __name__=="__main__":
+    init(autoreset=True)
     client =get_client()
     ctx=ToolContext(cwd=Path.cwd())
     messages=[]
