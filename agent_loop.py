@@ -2,13 +2,11 @@ from get_client import get_client
 from openai import OpenAI
 from dotenv import load_dotenv
 from pathlib import Path
-from tools import read_tool,ToolContext
+from tools import read_tool,ToolContext,TOOLS,tools_calls
 import os
 import json
 
 load_dotenv()
-TOOL_TABLE={read_tool.name:read_tool}
-TOOLS=[t.declaration() for t in TOOL_TABLE.values()]
 
 def agent_loop(messages:list,client:OpenAI,ctx:ToolContext):
     while True:
@@ -54,24 +52,9 @@ def agent_loop(messages:list,client:OpenAI,ctx:ToolContext):
 
         if not calls:
             return
+        tools_calls(calls=calls,messages=messages,ctx=ctx)
 
-        for _,c in sorted(calls.items()):
-            tool = TOOL_TABLE.get(c["name"])
-            try:
-                if tool is None:
-                    result=f"Unknown tool:{c['name']}"
-                else:
-                    params=tool.params.model_validate(json.loads(c["arguments"] or "{}"))
-                    result=tool.execute(params,ctx)
-            except Exception as e:
-                result=f"{type(e).__name__}:{e}"
-            messages.append(
-                {
-                    "role":"tool",
-                    "tool_call_id":c["id"],
-                    "content":str(result)
-                }
-            )
+        
 
 
 if __name__=="__main__":
@@ -79,9 +62,9 @@ if __name__=="__main__":
     ctx=ToolContext(cwd=Path.cwd())
     messages=[]
     while True:
-        print("--------------------------------------------")
+        print("\n--------------------------------------------")
         query=input()
-        print("--------------------------------------------")
+        print("--------------------------------------------\n")
         if query=="exit" or query == "q":
             break
         messages.append(

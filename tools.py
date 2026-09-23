@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from pydantic import BaseModel,Field
 from pathlib import Path
 from typing import Callable
+from bash_tool import bash_commond,BashParams
+import json
 @dataclass
 class ToolContext:
     cwd:Path
@@ -68,9 +70,44 @@ def _read(p:ReadParams,ctx:ToolContext)->str:
         out+=f"\n\n[Showing lines {p.offset}-{shown_end}. Use offset={shown_end+1} to continue.]"
     return out
 
+def _bash(p:BaseModel,ctx:ToolContext):
+    return bash_commond(p,ctx.cwd)
+
 read_tool = Tool(
     name="read",
     description="Read the contents of a file. Output is truncated for very large files; use offset/limit to page through.",
     params=ReadParams,
     execute=_read,
 )
+bash_tool=Tool(
+    name="bash",
+    description="Execute a bash command in the current working directory. Returns combined stdout and stderr.",
+    params=BashParams,
+    execute=_bash
+)
+TOOL_TABLE={read_tool.name:read_tool,bash_tool.name:bash_tool}
+TOOLS=[t.declaration() for t in TOOL_TABLE.values()]
+
+def tools_calls(calls:dict,messages:list,ctx:ToolContext)->dict:
+    for _,c in calls.items():
+        tool=TOOL_TABLE.get(c['name'])
+        p_which_tool_use(c) 
+        try:
+            if  not tool:
+                result=f"Unknown tool :{c['name']}"
+            else :
+                params=tool.params.model_validate(json.loads(c["arguments"] or "{}"))
+                result=tool.execute(params,ctx)
+        except Exception as e:
+            result=f"{type(e).__name__}:{e}"
+        messages.append(
+            {
+                "role":"tool",
+                "tool_call_id":c["id"],
+                "content":str(result)
+            }
+        )
+def p_which_tool_use(tool):
+        print("\n----------------------")
+        print("Tool Use: ",tool['name'])
+        print("----------------------\n")
