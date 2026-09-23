@@ -1,5 +1,6 @@
 from pydantic import BaseModel,Field
 import subprocess
+from tools_class import ToolContext,Tool
 from pathlib import Path
 
 class BashParams(BaseModel):
@@ -8,7 +9,7 @@ class BashParams(BaseModel):
 
 dangerous_command=["rm -rf /"]
 
-def bash_commond(p:BashParams,cwd:Path=None)->str:
+def _bash(p:BashParams,ctx:ToolContext)->str:
     for c in dangerous_command:
         if c in p.command:
             return f"Dangerous command: {c}"
@@ -17,12 +18,20 @@ def bash_commond(p:BashParams,cwd:Path=None)->str:
         result=subprocess.run(
             command,
             timeout=p.timeout,
-            capture_output=True
+            capture_output=True,
+            cwd=ctx.cwd,
         )
     except Exception as e:
-        result=f"{type(e).__name__:{str(e)}}"
+        result=f"{type(e).__name__:{e}}"
     return str(result)
             
+bash_tool=Tool(
+    name="bash",
+    description="Execute a bash command in the current working directory. Returns combined stdout and stderr.",
+    params=BashParams,
+    execute=_bash
+)
+
 
 if __name__=="__main__":
     p=BashParams.model_validate(
@@ -31,5 +40,8 @@ if __name__=="__main__":
             "timeout":1.0
         }
     )
-    res=bash_commond(p=p)
+    ctx=ToolContext(
+        cwd="/mnt/agent-exercise/min-codingAgent"
+    )
+    res=_bash(p=p,ctx=ctx)
     print(res)

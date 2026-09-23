@@ -2,7 +2,8 @@ from get_client import get_client
 from openai import OpenAI
 from dotenv import load_dotenv
 from pathlib import Path
-from tools import read_tool,ToolContext,TOOLS,tools_calls
+from tools import TOOLS,tools_calls
+from tools_class import ToolContext
 import os
 import json
 from colorama import init,Fore
