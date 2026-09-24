@@ -1,3 +1,4 @@
 .env
 docs/
 __pycache__/
+chroma-data/
