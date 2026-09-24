@@ -6,11 +6,17 @@ from colorama import Fore,init
 import json
 from bash_tool import bash_tool
 from read_tools import read_tool
+from rag_tools import ragAdd_tool,ragQuery_tool
 from tools_class import ToolContext
 
 
 
-TOOL_TABLE={read_tool.name:read_tool,bash_tool.name:bash_tool}
+TOOL_TABLE={
+    read_tool.name:read_tool,
+    bash_tool.name:bash_tool,
+    ragAdd_tool.name:ragAdd_tool,
+    ragQuery_tool.name:ragQuery_tool,
+}
 TOOLS=[t.declaration() for t in TOOL_TABLE.values()]
 
 def tools_calls(calls:dict,messages:list,ctx:ToolContext)->dict:
@@ -45,9 +51,13 @@ def p_which_tool_use(tool):
         params=t.params.model_validate(json.loads(tool["arguments"] or "{}"))
         print(Fore.RED+"\n即将执行以下指令:\n",params.command,"\n")
         print("------------------\n")
-        query=input("如果希望不执行这个指令请输入no\n")
+        try:
+            query=input("如果希望不执行这个指令请输入no\n").strip().lower()
+        except (EOFError,KeyboardInterrupt):
+            print()
+            return False                      # 输入中断时按「不执行」处理，更安全
         print("------------------\n")
-        if "no" in query or "q" in query or "exit" in query:
+        if query in ("no","n","q","exit"):
             return False
 
     return True

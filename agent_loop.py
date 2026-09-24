@@ -56,6 +56,12 @@ def agent_loop(messages:list,client:OpenAI,ctx:ToolContext):
             return
         tools_calls(calls=calls,messages=messages,ctx=ctx)
 
+def user_input()->str:
+    try:
+            query=input().strip()
+    except (EOFError,KeyboardInterrupt):     # Ctrl-D / Ctrl-C
+            return "exit"
+    return query
         
 
 
@@ -66,10 +72,12 @@ if __name__=="__main__":
     messages=[]
     while True:
         print("\n--------------------------------------------")
-        query=input()
+        query = user_input()
         print("--------------------------------------------\n")
-        if query=="exit" or query == "q":
+        if query.lower() in ("exit","q"):
             break
+        if not query:                            # 空输入不要发给模型
+            continue
         messages.append(
             {
                 "role":"user",
