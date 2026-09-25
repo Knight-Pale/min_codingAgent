@@ -8,7 +8,7 @@ from bash_tool import bash_tool
 from read_tools import read_tool
 from rag_tools import ragAdd_tool,ragQuery_tool
 from tools_class import ToolContext
-
+from glob_tool import glob_tool
 
 
 TOOL_TABLE={
@@ -16,6 +16,7 @@ TOOL_TABLE={
     bash_tool.name:bash_tool,
     ragAdd_tool.name:ragAdd_tool,
     ragQuery_tool.name:ragQuery_tool,
+    glob_tool.name:glob_tool
 }
 TOOLS=[t.declaration() for t in TOOL_TABLE.values()]
 

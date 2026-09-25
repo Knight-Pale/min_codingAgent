@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from tools_class import ToolContext,Tool
+from tools_class import ToolContext,Tool,get_Right_path
 from pathlib import Path
 
 class ReadParams(BaseModel):
@@ -12,8 +12,7 @@ MAX_LINES=2000
 MAX_BYTES=200*1024
 def _read(p:ReadParams,ctx:ToolContext)->str:
 
-    raw=Path(p.path)
-    path=raw if raw.is_absolute() else (ctx.cwd/raw).resolve()
+    path=get_Right_path(p.path,ctx)
 
     lines:list[str]=[]
     used=0

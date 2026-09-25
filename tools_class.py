@@ -24,3 +24,11 @@ class Tool:
                 "parameters":schema,
             },
         }
+
+def truncated_for_text(maxLines:int,text:list[str]):
+    pass
+
+def get_Right_path(path:str,ctx:ToolContext)->Path:
+    raw=Path(path)
+    path=raw if raw.is_absolute() else (ctx.cwd/raw).resolve()
+    return path
