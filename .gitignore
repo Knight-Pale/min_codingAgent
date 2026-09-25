@@ -2,3 +2,5 @@
 docs/
 __pycache__/
 chroma-data/
+data/
+test_data/

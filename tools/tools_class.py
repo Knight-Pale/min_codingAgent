@@ -1,10 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import dataclass,field
 from pathlib import Path
 from typing import Callable
 from pydantic import BaseModel
 @dataclass
 class ToolContext:
     cwd:Path
+    readed_file:list[str]=field(default_factory=list)
 
 @dataclass
 class Tool:

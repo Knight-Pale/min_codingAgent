@@ -1,6 +1,6 @@
 from pydantic import BaseModel,Field
 import subprocess
-from tools_class import ToolContext,Tool
+from .tools_class import ToolContext,Tool
 from pathlib import Path
 
 class BashParams(BaseModel):

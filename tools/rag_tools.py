@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
 from pydantic import BaseModel,ConfigDict,Field,model_validator
 from typing import Literal
-from tools_class import Tool,ToolContext
+from .tools_class import Tool,ToolContext
 
 load_dotenv()
 DB_DIR="/mnt/agent-exercise/min-codingAgent/chroma-data"

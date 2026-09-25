@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from tools_class import ToolContext,Tool,get_Right_path
+from .tools_class import ToolContext,Tool,get_Right_path
 from pathlib import Path
 
 class ReadParams(BaseModel):
@@ -42,6 +42,7 @@ def _read(p:ReadParams,ctx:ToolContext)->str:
     if truncated:
         shown_end=p.offset+len(lines)-1
         out+=f"\n\n[Showing lines {p.offset}-{shown_end}. Use offset={shown_end+1} to continue.]"
+    ctx.readed_file.append(p.path)
     return out
 
 read_tool=Tool(

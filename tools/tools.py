@@ -4,11 +4,12 @@ from pathlib import Path
 from typing import Callable
 from colorama import Fore,init
 import json
-from bash_tool import bash_tool
-from read_tools import read_tool
-from rag_tools import ragAdd_tool,ragQuery_tool
-from tools_class import ToolContext
-from glob_tool import glob_tool
+from .bash_tool import bash_tool
+from .read_tools import read_tool
+from .rag_tools import ragAdd_tool,ragQuery_tool
+from .tools_class import ToolContext
+from .glob_tool import glob_tool
+import subprocess
 
 
 TOOL_TABLE={
@@ -53,7 +54,10 @@ def p_which_tool_use(tool):
         print(Fore.RED+"\n即将执行以下指令:\n",params.command,"\n")
         print("------------------\n")
         try:
-            query=input("如果希望不执行这个指令请输入no\n").strip().lower()
+            while(True):
+                query=input("是否要执行这个指令(Yes/no)\n").strip().lower()
+                if query:
+                    break
         except (EOFError,KeyboardInterrupt):
             print()
             return False                      # 输入中断时按「不执行」处理，更安全
@@ -62,3 +66,20 @@ def p_which_tool_use(tool):
             return False
 
     return True
+
+def check_readedFile(ctx:ToolContext):
+    try:
+        result=subprocess.run(
+            ["bash","-c","git diff --stat"],
+            capture_output=True,
+            cwd=ctx.cwd
+        )
+        res=result.stdout.decode("utf-8")
+        for file in ctx.readed_file:
+            if file in res:
+                ctx.readed_file.remove(file)
+    except Exception as e:
+        return f"wrong:{type(e).__name__}:{e}"
+
+    return ctx.readed_file
+

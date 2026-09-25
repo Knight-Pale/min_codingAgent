@@ -1,4 +1,4 @@
-from tools_class import ToolContext,Tool,get_Right_path
+from .tools_class import ToolContext,Tool,get_Right_path
 from pydantic import BaseModel,Field
 from pathlib import Path
 
@@ -44,8 +44,8 @@ glob_tool=Tool(
 
 if __name__=="__main__":
     p=GlobParams(
-        pattern="rag_tools.py",
-        path=".",
+        pattern="*.py",
+        path="tools",
         count=4
     )
     ctx=ToolContext(
