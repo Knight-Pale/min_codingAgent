@@ -42,7 +42,8 @@ def _read(p:ReadParams,ctx:ToolContext)->str:
     if truncated:
         shown_end=p.offset+len(lines)-1
         out+=f"\n\n[Showing lines {p.offset}-{shown_end}. Use offset={shown_end+1} to continue.]"
-    ctx.readed_file.append(p.path)
+    if not path in  ctx.readed_file:
+        ctx.readed_file.append(str(path))
     return out
 
 read_tool=Tool(

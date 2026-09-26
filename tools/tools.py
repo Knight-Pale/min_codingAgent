@@ -10,14 +10,17 @@ from .rag_tools import ragAdd_tool,ragQuery_tool
 from .tools_class import ToolContext
 from .glob_tool import glob_tool
 import subprocess
-
+from .write_tools import write_tool
+from .edit_tool import edit_tool
 
 TOOL_TABLE={
     read_tool.name:read_tool,
     bash_tool.name:bash_tool,
     ragAdd_tool.name:ragAdd_tool,
     ragQuery_tool.name:ragQuery_tool,
-    glob_tool.name:glob_tool
+    glob_tool.name:glob_tool,
+    write_tool.name:write_tool,
+    edit_tool.name:edit_tool
 }
 TOOLS=[t.declaration() for t in TOOL_TABLE.values()]
 
