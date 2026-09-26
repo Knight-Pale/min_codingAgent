@@ -207,10 +207,11 @@ Metadata(
 
 **多进程注意事项**：`rag_tools` 在每个工具入口都会调一次 `_reset_cache()`，主动丢弃 chromadb 的进程内系统缓存后再干活。因为 chromadb 按路径缓存底层 `System`，别的进程删库/重建后，本进程即使重新 `PersistentClient` 也只会拿到陈旧状态（症状是 `rag_list` 报出已不存在的库、`rag_add` 报 `readonly database`）。这也是 `chromadb` 版本被钉死的原因。
 
-**迁移项目位置时记得改** `rag_tools.py:10`：
+**迁移项目位置时不用改代码**：向量库默认落在仓库根的 `chroma-data/`（`rag_tools.py` 用 `Path(__file__)` 推出仓库根，已 gitignore）。想放到别处（共享盘、已有数据目录）就设环境变量覆盖：
 
-```python
-DB_DIR="/mnt/agent-exercise/min-codingAgent/chroma-data"   # 硬编码绝对路径
+```ini
+# .env
+CHROMA_DB_DIR=/mnt/agent-exercise/min-codingAgent/chroma-data
 ```
 
 ## 如何新增一个工具
@@ -307,5 +308,5 @@ python -m compileall -q .
 
 **环境相关**
 
-- `rag_tools.py:10` 的 `DB_DIR` 是硬编码绝对路径，换机器/换目录必须改。
+- `rag_tools.py` 的 `DB_DIR` 默认取仓库根下的 `chroma-data/`，可用环境变量 `CHROMA_DB_DIR` 覆盖。
 - `chromadb==1.5.9` 被 `_reset_cache()` 的私有 API 依赖钉住，升级前请先读该函数的注释。
