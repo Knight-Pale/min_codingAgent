@@ -32,6 +32,10 @@ def agent_loop(messages:list,client:OpenAI,ctx:ToolContext):
                 slot=calls.setdefault(tc.index,{"id":"","name":"","arguments":""})
                 if tc.id:
                     slot["id"]=tc.id
+                # OpenAI 兼容服务（含部分中转）在后续增量里可能发 function: null，
+                # 直接取 tc.function.name 会 AttributeError 打断整个 REPL。
+                if tc.function is None:
+                    continue
                 if tc.function.name:
                     slot["name"]=tc.function.name
                 if tc.function.arguments:
