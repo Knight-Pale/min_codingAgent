@@ -14,23 +14,32 @@ def _read(p:ReadParams,ctx:ToolContext)->str:
 
     path=get_Right_path(p.path,ctx)
 
+    if not path.is_file():
+        # 旧实现直接 open()：路径不存在或是目录时会抛异常，被 tools_calls 兜成一段
+        # traceback 文本（Windows 上目录甚至报 PermissionError）。按项目约定
+        # （execute 尽量返回描述性错误串）在这里先拦一道。
+        return f"Wrong:{p.path}不是一个可读的文件（不存在或者是目录）"
+
     lines:list[str]=[]
     used=0
     truncated=False
     total_lines=0
     cap=p.limit if p.limit is not None else MAX_LINES
 
-    with open(path,encoding="utf-8",errors="replace") as f:
-        for i,line in enumerate(f,start=1):
-            total_lines=i
-            if i<p.offset:
-                continue
-            line=line.rstrip("\n")
-            used+=len(line.encode("utf-8"))+1
-            if used>=MAX_BYTES or len(lines)>=cap:
-                truncated=True
-                break
-            lines.append(line)
+    try:
+        with open(path,encoding="utf-8",errors="replace") as f:
+            for i,line in enumerate(f,start=1):
+                total_lines=i
+                if i<p.offset:
+                    continue
+                line=line.rstrip("\n")
+                used+=len(line.encode("utf-8"))+1
+                if used>=MAX_BYTES or len(lines)>=cap:
+                    truncated=True
+                    break
+                lines.append(line)
+    except OSError as e:
+        return f"Wrong:读取{p.path}失败:{type(e).__name__}:{e}"
 
     if not lines:
         if truncated:

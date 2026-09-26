@@ -10,13 +10,20 @@ def _edit(p:EditParams,ctx:ToolContext):
     path=get_Right_path(p.path,ctx)
     if not str(path) in ctx.readed_file:
         return f"Wrong:{path}没有在已读列表中,请先使用read工具进行阅读"
-    text=path.read_text(encoding="utf-8")
+    try:
+        text=path.read_text(encoding="utf-8")
+    except OSError as e:
+        # 白名单里的文件被删掉/改权限后，read_text 会抛异常
+        return f"Wrong:读取{path}失败:{type(e).__name__}:{e}"
     count=text.count(p.old_str)
     if count <=0:
         return f"Wrong:未找到旧文本{p.old_str},请重新读取文本，确保内容一致"
     elif count>1:
         return f"Wrong:存在多处与旧文本匹配的片段,请扩大匹配片段，确保替换的唯一性"
-    path.write_text(text.replace(p.old_str,p.new_str,1),encoding="utf-8")
+    try:
+        path.write_text(text.replace(p.old_str,p.new_str,1),encoding="utf-8")
+    except OSError as e:
+        return f"Wrong:写入{path}失败:{type(e).__name__}:{e}"
     return f"已成功替换{path}的文本"
 
 edit_tool=Tool(
