@@ -6,7 +6,7 @@ from colorama import Fore,init
 import json
 from .bash_tool import bash_tool
 from .read_tools import read_tool
-from .rag_tools import ragAdd_tool,ragQuery_tool
+from .rag_tools import ragAdd_tool,ragQuery_tool,ragList_tool
 from .tools_class import ToolContext
 from .glob_tool import glob_tool
 import subprocess
@@ -18,6 +18,7 @@ TOOL_TABLE={
     bash_tool.name:bash_tool,
     ragAdd_tool.name:ragAdd_tool,
     ragQuery_tool.name:ragQuery_tool,
+    ragList_tool.name:ragList_tool,
     glob_tool.name:glob_tool,
     write_tool.name:write_tool,
     edit_tool.name:edit_tool

@@ -1,5 +1,7 @@
 annotated-types==0.8.0
 anyio==4.15.1
+# 钉住版本：rag_tools 依赖私有 API SharedSystemClient.clear_system_cache 来避免读到陈旧的向量库状态
+chromadb==1.5.9
 colorama==0.4.6
 h11==0.16.0
 httpcore2==2.13.1
