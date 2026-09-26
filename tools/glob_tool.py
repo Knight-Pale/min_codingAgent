@@ -9,7 +9,7 @@ class GlobParams(BaseModel):
                                   "只想按扩展名找文件时用 '**/*.后缀'。不要用 '..' 向上穿越目录")
     path: str =Field(".",description="搜索的根目录，默认为 '.'（即当前工作目录 ctx.cwd）。"
                                      "可传相对路径（基于 ctx.cwd 解析）或绝对路径")
-    count: int =Field(description="最多显示多少个文件名，从排序后的匹配结果中截取前 count 个，必须为正整数。"
+    count: int =Field(..., ge=1, description="最多显示多少个文件名，从排序后的匹配结果中截取前 count 个，必须为正整数。"
                                   "匹配到的文件多于 count 时只统计总数、不显示多出的文件名；"
                                   "想先看看一共有多少个匹配文件时可以传一个大一些的值")
 
