@@ -49,7 +49,7 @@ if __name__=="__main__":
         count=4
     )
     ctx=ToolContext(
-        cwd="/mnt/agent-exercise/min-codingAgent"
+        cwd=Path(__file__).resolve().parent.parent   # 仓库根目录，换机器也能跑
     )
     result=_glob(p,ctx=ctx)
     print(result)
