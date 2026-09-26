@@ -22,7 +22,7 @@ def _bash(p:BashParams,ctx:ToolContext)->str:
             cwd=ctx.cwd,
         )
     except Exception as e:
-        result=f"{type(e).__name__:{e}}"
+        result=f"{type(e).__name__}:{e}"
     return str(result)
             
 bash_tool=Tool(
