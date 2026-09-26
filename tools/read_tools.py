@@ -1,6 +1,5 @@
 from pydantic import BaseModel,Field
 from .tools_class import ToolContext,Tool,get_Right_path
-from pathlib import Path
 
 class ReadParams(BaseModel):
     path:str=Field(description="Path to the file to read (relative or absolute)")
