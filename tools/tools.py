@@ -79,9 +79,9 @@ def check_readedFile(ctx:ToolContext):
             cwd=ctx.cwd
         )
         res=result.stdout.decode("utf-8")
-        for file in ctx.readed_file:
-            if file in res:
-                ctx.readed_file.remove(file)
+        # 不要一边遍历 ctx.readed_file 一边 remove：remove 会让后面的元素被跳过，
+        # 三个文件都出现在 diff 里时只会删掉其中两个。整体重建一次更直观。
+        ctx.readed_file=[f for f in ctx.readed_file if f not in res]
     except Exception as e:
         return f"wrong:{type(e).__name__}:{e}"
 
