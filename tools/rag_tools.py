@@ -3,11 +3,14 @@ import chromadb
 from dotenv import load_dotenv
 from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
 from pydantic import BaseModel,ConfigDict,Field,model_validator
+from pathlib import Path
 from typing import Literal
 from .tools_class import Tool,ToolContext
 
 load_dotenv()
-DB_DIR="/mnt/agent-exercise/min-codingAgent/chroma-data"
+# 默认落在仓库根的 chroma-data/（已 gitignore），换机器/换目录不用改代码；
+# 想放到别处（比如共享盘）时用环境变量 CHROMA_DB_DIR 覆盖。
+DB_DIR=os.environ.get("CHROMA_DB_DIR") or str(Path(__file__).resolve().parent.parent/"chroma-data")
 
 class Metadata(BaseModel):
     model_config=ConfigDict(extra="forbid")   # 多传字段直接报错，而不是静默丢掉
