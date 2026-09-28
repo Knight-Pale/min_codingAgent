@@ -289,7 +289,6 @@ python -m compileall -q .
 
 **功能缺口**
 
-- `tools/tools_class.py:29` `truncated_for_text()` 是空实现，尚未接入。
 - `tools/tools.py:74` `check_readedFile()`（本意是用 `git diff --stat` 把已改动的文件移出 `readed_file` 白名单）目前无人调用，白名单只增不减。
 - `bash` 之外的工具（`write` / `edit`）没有二次确认，模型的写操作会直接落盘。
 

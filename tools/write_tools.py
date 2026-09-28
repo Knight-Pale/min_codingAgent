@@ -1,6 +1,5 @@
 from .tools_class import Tool,ToolContext,get_Right_path
 from pydantic import BaseModel,Field
-from pathlib import Path
 
 class WriteParams(BaseModel):
     path:str=Field(description="要写入的文件路径")

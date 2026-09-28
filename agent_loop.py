@@ -5,7 +5,6 @@ from pathlib import Path
 from tools.tools import TOOLS,tools_calls
 from tools.tools_class import ToolContext
 import os
-import json
 from colorama import init,Fore
 
 load_dotenv()
