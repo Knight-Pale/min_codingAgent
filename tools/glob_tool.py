@@ -13,6 +13,17 @@ class GlobParams(BaseModel):
                                   "匹配到的文件多于 count 时只统计总数、不显示多出的文件名；"
                                   "想先看看一共有多少个匹配文件时可以传一个大一些的值")
 
+def _display_path(path:Path,base:Path)->str:
+    """尽量显示相对路径；目标在 base 之外（或不同盘符）时退回绝对路径。
+
+    旧实现直接 path.relative_to(base)，只要搜索目录在 ctx.cwd 之外就抛 ValueError，
+    被外层 except 捕获后整个 glob 都失败 —— 而 path 支持绝对路径是写进工具说明的。
+    """
+    try:
+        return str(path.relative_to(base))
+    except ValueError:
+        return str(path)
+
 def _glob(p:GlobParams,ctx:ToolContext):
     try:
         target_path=get_Right_path(p.path,ctx)
@@ -21,7 +32,7 @@ def _glob(p:GlobParams,ctx:ToolContext):
         matches= sorted(target_path.glob(p.pattern))
         if not matches:
             return "未找到匹配的文件"
-        result=[str(f.relative_to(ctx.cwd))for f in matches if f.is_file()]
+        result=[_display_path(f,ctx.cwd) for f in matches if f.is_file()]
         if not result:
             return "Nothing"
         tot=len(result)
