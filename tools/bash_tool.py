@@ -37,11 +37,11 @@ if __name__=="__main__":
     p=BashParams.model_validate(
         {
             "command":"ls -al",
-            "timeout":1.0
+            "timeout":10.0   # 自测专用：Windows 下 bash 冷启动可能超过 1s，别让自测假失败
         }
     )
     ctx=ToolContext(
-        cwd="/mnt/agent-exercise/min-codingAgent"
+        cwd=Path(__file__).resolve().parent.parent   # 仓库根目录，换机器也能跑
     )
     res=_bash(p=p,ctx=ctx)
     print(res)
