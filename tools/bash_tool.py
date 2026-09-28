@@ -19,15 +19,23 @@ def _bash(p:BashParams,ctx:ToolContext)->str:
             command,
             timeout=p.timeout,
             capture_output=True,
+            text=True,            # 解码成文本：别把 b'...\n...' 的 repr 喂给模型
+            encoding="utf-8",
+            errors="replace",
             cwd=ctx.cwd,
         )
     except Exception as e:
-        result=f"{type(e).__name__}:{e}"
-    return str(result)
-            
+        return f"{type(e).__name__}:{e}"
+    # 旧实现直接 str(CompletedProcess)，模型看到的是
+    # "CompletedProcess(args=[...], stdout=b'...\\n...', stderr=b'...')"：
+    # 既不是说明里承诺的「stdout+stderr 合并」，还得自己去解析字节字面量。
+    return (f"exit code: {result.returncode}\n"
+            f"stdout:\n{result.stdout.rstrip()}\n"
+            f"stderr:\n{result.stderr.rstrip()}")
+
 bash_tool=Tool(
     name="bash",
-    description="Execute a bash command in the current working directory. Returns combined stdout and stderr.",
+    description="Execute a bash command in the current working directory. Returns the exit code plus stdout and stderr as text.",
     params=BashParams,
     execute=_bash
 )

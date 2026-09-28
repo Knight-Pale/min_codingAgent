@@ -174,7 +174,7 @@ Tool Use:  read
 | `glob` | `pattern`、`path="."`、`count` | 按 glob 通配符定位文件（支持 `**`），只返回文件、不返回目录，结果按路径排序、最多显示 `count` 个 |
 | `write` | `path`、`text=""` | **只用于新建文件**；目标已存在则直接拒绝（防止模型误覆盖），父目录会自动创建 |
 | `edit` | `path`、`old_str`、`new_str` | 精确字符串替换。要求文件**已在本会话被 read 过**，且 `old_str` 在文件中**恰好出现一次**（0 次或多处都会拒绝并要求模型重新读取），替换后写回 |
-| `bash` | `command`、`timeout` | 在 `ctx.cwd` 下执行 `bash -c <command>`，返回 `CompletedProcess` 的字符串表示。含 `rm -rf /` 的指令直接拒绝；**执行前需用户确认** |
+| `bash` | `command`、`timeout` | 在 `ctx.cwd` 下执行 `bash -c <command>`，返回退出码与解码后的 stdout/stderr 文本。含 `rm -rf /` 的指令直接拒绝；**执行前需用户确认** |
 | `rag_add` | `documents`、`col_name` | 文本片段入库（upsert，同 id 覆盖），返回入库数量与该库当前总数 |
 | `rag_query` | `query`、`col_name`、`k=4` | 语义检索，返回片段 + 出处 + `dist`（越小越相关），每条正文截断 1200 字符；库名不存在时会列出所有可用库名 |
 | `rag_list` | — | 列出所有向量库及片段数量，用于确认"库名到底叫什么" |
